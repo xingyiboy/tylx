@@ -46,7 +46,7 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/ruoyi-vue-pro?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
+          url: jdbc:mysql://43.139.211.116:3306/tylx?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
           #          url: jdbc:mysql://127.0.0.1:3306/ruoyi-vue-pro?useSSL=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true # MySQL Connector/J 5.X 连接的示例
           #          url: jdbc:postgresql://127.0.0.1:5432/ruoyi-vue-pro # PostgreSQL 连接的示例
           #          url: jdbc:oracle:thin:@127.0.0.1:1521:xe # Oracle 连接的示例
@@ -54,26 +54,26 @@ spring:
           #          url: jdbc:dm://127.0.0.1:5236?schema=RUOYI_VUE_PRO # DM 连接的示例
           #          url: jdbc:kingbase8://127.0.0.1:54321/test  # 人大金仓 KingbaseES 连接的示例
           #          url: jdbc:postgresql://127.0.0.1:5432/postgres # OpenGauss 连接的示例
-          username: root
-          password: 123456
+          username: tylx
+          password: f3anCyJNFZdKPNwa
           #          username: sa # SQL Server 连接的示例
           #          password: Yudao@2024 # SQL Server 连接的示例
           #          username: SYSDBA # DM 连接的示例
           #          password: SYSDBA001 # DM 连接的示例
           #          username: root # OpenGauss 连接的示例
           #          password: Yudao@2024 # OpenGauss 连接的示例
-        slave: # 模拟从库，可根据自己需要修改
-          lazy: true # 开启懒加载，保证启动速度
-          url: jdbc:mysql://127.0.0.1:3306/ruoyi-vue-pro?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
-          username: root
-          password: 123456
+#        slave: # 模拟从库，可根据自己需要修改
+#          lazy: true # 开启懒加载，保证启动速度
+#          url: jdbc:mysql://43.139.211.116:3306/tylx?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
+#          username: tylx
+#          password: f3anCyJNFZdKPNwa
 
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   redis:
-    host: 127.0.0.1 # 地址
+    host: 43.139.211.116 # 地址
     port: 6379 # 端口
-    database: 0 # 数据库索引
-#    password: dev # 密码，建议生产环境开启
+    database: 1 # 数据库索引
+    password: F23fae2E2D
 
 --- #################### 定时任务相关配置 ####################
 
@@ -215,6 +215,9 @@ yudao:
   captcha:
     enable: false # 本地环境，暂时关闭图片验证码，方便登录等接口的测试；
   security:
+    token-timeout: 30d # Token 过期时间,默认1天
+    session-timeout: 30d # Session 过期时间,默认30天
+    token-secret: abcdefghijklmnopqrstuvwxyz # JWT 秘钥
     mock-enable: true
   pay:
     order-notify-url: http://yunai.natapp1.cc/admin-api/pay/notify/order # 支付渠道的【支付】回调地址

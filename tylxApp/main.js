@@ -1,15 +1,17 @@
-import App from './App';
-import { createSSRApp } from 'vue';
-import { setupPinia } from './sheep/store';
+import Vue from 'vue'
+import App from './App'
+import store from './store' // store
+import plugins from './plugins' // plugins
+import './permission' // permission
+Vue.use(plugins)
 
+Vue.config.productionTip = false
+Vue.prototype.$store = store
 
-export function createApp() {
+App.mpType = 'app'
 
-  const app = createSSRApp(App);
-  
-  setupPinia(app);
+const app = new Vue({
+  ...App
+})
 
-  return {
-    app,
-  };
-}
+app.$mount()

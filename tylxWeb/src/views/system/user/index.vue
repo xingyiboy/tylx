@@ -1,8 +1,4 @@
 <template>
-  <doc-alert title="用户体系" url="https://doc.iocoder.cn/user-center/" />
-  <doc-alert title="三方登陆" url="https://doc.iocoder.cn/social-user/" />
-  <doc-alert title="Excel 导入导出" url="https://doc.iocoder.cn/excel-import-and-export/" />
-
   <el-row :gutter="20">
     <!-- 左侧部门树 -->
     <el-col :span="4" :xs="24">
@@ -128,6 +124,14 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="金额" align="center" prop="money" width="120" />
+          <el-table-column
+            label="出生日期"
+            align="center"
+            prop="birthDate"
+            :formatter="dateFormatterBirth"
+            width="180"
+          />
           <el-table-column
             label="创建时间"
             align="center"
@@ -210,6 +214,15 @@ import UserForm from './UserForm.vue'
 import UserImportForm from './UserImportForm.vue'
 import UserAssignRoleForm from './UserAssignRoleForm.vue'
 import DeptTree from './DeptTree.vue'
+
+const dateFormatterBirth = (row, column, cellValue) => {
+  if (!cellValue) return '' // 如果没有值，返回空
+  const date = new Date(cellValue) // 将 cellValue 转换为 Date 对象
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0') // 获取月并补齐两位
+  const day = date.getDate().toString().padStart(2, '0') // 获取日并补齐两位
+  return `${year}-${month}-${day}` // 格式化为 年-月-日
+}
 
 defineOptions({ name: 'SystemUser' })
 

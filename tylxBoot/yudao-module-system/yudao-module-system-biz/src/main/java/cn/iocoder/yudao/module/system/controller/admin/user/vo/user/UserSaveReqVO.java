@@ -12,6 +12,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Schema(description = "管理后台 - 用户创建/修改 Request VO")
@@ -69,6 +71,10 @@ public class UserSaveReqVO {
     @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED, example = "123456")
     @Length(min = 4, max = 16, message = "密码长度为 4-16 位")
     private String password;
+
+    private LocalDateTime birthDate;
+
+    private BigDecimal money;
 
     @AssertTrue(message = "密码不能为空")
     @JsonIgnore

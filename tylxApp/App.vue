@@ -1,37 +1,34 @@
-<script setup>
-  import { onLaunch, onShow, onError } from '@dcloudio/uni-app';
-  import { ShoproInit } from './sheep';
+<script>
+  import config from './config'
+  import store from '@/store'
+  import { getAccessToken } from '@/utils/auth'
 
-  onLaunch(() => {
-    // 延时隐藏原生导航栏
-    setTimeout(() => {
-      uni.hideTabBar();
-    }, 200);
-
-    // 加载Shopro底层依赖
-    ShoproInit();
-  });
-
-  onShow((options) => {
-    // #ifdef APP-PLUS
-    // 获取urlSchemes参数
-    const args = plus.runtime.arguments;
-    if (args) {
+  export default {
+    onLaunch: function() {
+      this.initApp()
+    },
+    methods: {
+      // 初始化应用
+      initApp() {
+        // 初始化应用配置
+        this.initConfig()
+        // 检查用户登录状态
+        //#ifdef H5
+        this.checkLogin()
+        //#endif
+      },
+      initConfig() {
+        this.globalData.config = config
+      },
+      checkLogin() {
+        if (!getAccessToken()) {
+          this.$tab.reLaunch('/pages/login')
+        }
+      }
     }
-
-    // 获取剪贴板
-    uni.getClipboardData({
-      success: (res) => {},
-    });
-    // #endif
-
-    // #ifdef MP-WEIXIN
-    // 确认收货回调结果
-    console.log(options, 'options');
-    // #endif
-  });
+  }
 </script>
 
 <style lang="scss">
-  @import '@/sheep/scss/index.scss';
+  @import '@/static/scss/index.scss'
 </style>

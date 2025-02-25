@@ -9,48 +9,44 @@
 
 ## 🐶 新手必读
 
-* 演示地址：<https://doc.iocoder.cn/mall-preview/>
+* 演示地址【Vue3 + element-plus】：<http://dashboard-vue3.yudao.iocoder.cn>
+* 演示地址【Vue3 + vben(ant-design-vue)】：<http://dashboard-vben.yudao.iocoder.cn>
+* 演示地址【Vue2 + element-ui】：<http://dashboard.yudao.iocoder.cn>
 * 启动文档：<https://doc.iocoder.cn/quick-start/>
 * 视频教程：<https://doc.iocoder.cn/video/>
 
-## 🐯 商城简介
+## 🐯 平台简介
 
-**芋道商城**，基于 [芋道开发平台](https://github.com/YunaiV/ruoyi-vue-pro) 构建，以开发者为中心，打造中国第一流的 Java 开源商城系统，全部开源，个人与企业可 100% 免费使用。
+**芋道**，以开发者为中心，打造中国第一流的快速开发平台，全部开源，个人与企业可 100% 免费使用。
 
-> 有任何问题，或者想要的功能，可以在 Issues 中提给艿艿。
->
-> 😜 给项目点点 Star 吧，这对我们真的很重要！
+![](/.image/admin-uniapp/02.png)
 
-![功能图](/.image/common/mall-feature.png)
+* 采用 uni-app 框架，一套代码多端适配，支持 App、小程序、H5！
+* 已经实现登录、我的、工作台、编辑资料、头像修改、密码修改、常见问题、关于我们等基础功能。
 
-* 基于 uni-app + Vue3 开发，支持微信小程序、微信公众号、H5 移动端，未来会支持支付宝小程序、抖音小程序等
-* 支持 SaaS 多租户，可满足商品、订单、支付、会员、优惠券、秒杀、拼团、砍价、分销、积分等多种经营需求
+## 技术栈
+
+| 框架                                              | 说明                 | 版本     |
+|-------------------------------------------------|--------------------|--------|
+| [uni-app](hhttps://github.com/dcloudio/uni-app) | 跨平台框架              | 2.0.0  |
+| [uni-ui](https://github.com/dcloudio/uni-ui)    | 基于 uni-app 的 UI 框架 | 1.4.20 |
 
 ## 🔥 后端架构
 
 支持 Spring Boot、Spring Cloud 两种架构：
 
-① Spring Boot 单体架构：<https://doc.iocoder.cn>
+① Spring Boot 单体架构：<https://github.com/YunaiV/ruoyi-vue-pro>
 
 ![架构图](/.image/common/ruoyi-vue-pro-architecture.png)
 
-② Spring Cloud 微服务架构：<https://cloud.iocoder.cn>
+② Spring Cloud 微服务架构：<https://github.com/YunaiV/yudao-cloud>
 
 ![架构图](/.image/common/yudao-cloud-architecture.png)
 
-## 🐱 移动端预览
+## 🐷 演示图
 
-![移动端预览](/.image/common/mall-preview.png)
-
-## 🐶 管理端预览
-
-![店铺装修](/.image/mall/店铺装修.png)
-
-![会员详情](/.image/mall/会员详情.png)
-
-![商品详情](/.image/mall/商品详情.png)
-
-![订单详情](/.image/mall/订单详情.png)
-
-![营销中心](/.image/mall/营销中心.png)
-
+| biu                              | biu                              | biu                              |
+|----------------------------------|----------------------------------|----------------------------------|
+| ![](/.image/admin-uniapp/01.png) | ![](/.image/admin-uniapp/02.png) | ![](/.image/admin-uniapp/03.png) |
+| ![](/.image/admin-uniapp/04.png) | ![](/.image/admin-uniapp/05.png) | ![](/.image/admin-uniapp/06.png) |
+| ![](/.image/admin-uniapp/07.png) | ![](/.image/admin-uniapp/08.png) | ![](/.image/admin-uniapp/09.png) |

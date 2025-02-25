@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 
 @Schema(description = "管理后台 - 用户个人信息更新 Request VO")
@@ -27,5 +28,7 @@ public class UserProfileUpdateReqVO {
 
     @Schema(description = "用户性别，参见 SexEnum 枚举类", example = "1")
     private Integer sex;
+
+    private LocalDateTime birthDate;
 
 }

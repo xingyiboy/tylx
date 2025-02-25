@@ -61,7 +61,7 @@ $uni-border-color:#e5e5e5;
 	/* #ifndef APP-NVUE */
 	display: flex;
 	/* #endif */
-	// background-color: $uni-bg-color;
+	background-color: $uni-bg-color;
 	position: relative;
 	flex-direction: column;
 }

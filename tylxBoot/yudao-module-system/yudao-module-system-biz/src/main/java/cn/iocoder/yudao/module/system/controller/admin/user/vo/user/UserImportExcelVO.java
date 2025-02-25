@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 /**
  * 用户 Excel 导入 VO
  */
@@ -42,5 +45,9 @@ public class UserImportExcelVO {
     @ExcelProperty(value = "账号状态", converter = DictConvert.class)
     @DictFormat(DictTypeConstants.COMMON_STATUS)
     private Integer status;
+
+    private LocalDateTime birthDate;
+
+    private BigDecimal money;
 
 }
