@@ -132,6 +132,28 @@ public class ForumController {
         return success(bean);
     }
 
+    @GetMapping("/Mypage")
+    @Operation(summary = "获得我的论坛分页")
+    public CommonResult<PageResult<ForumRespVO>> getForumMyPage(@Valid ForumPageReqVO pageReqVO) {
+        pageReqVO.setUserId(SecurityFrameworkUtils.getLoginUserId());
+        PageResult<ForumDO> pageResult = forumService.getForumPage(pageReqVO);
+        PageResult<ForumRespVO> bean = BeanUtils.toBean(pageResult, ForumRespVO.class);
+        List<ForumRespVO> list = bean.getList();
+        for (ForumRespVO forumRespVO : list) {
+            AdminUserDO adminUserDO = adminUserMapper.selectById(forumRespVO.getUserId());
+            if (adminUserDO != null) {
+                if (adminUserDO.getAvatar() != null){
+                    forumRespVO.setAvatar(adminUserDO.getAvatar());
+                }
+                if( adminUserDO.getNickname() != null){
+                    forumRespVO.setUserName(adminUserDO.getNickname());
+                }
+            }
+        }
+        bean.setList(list);
+        return success(bean);
+    }
+
     @GetMapping("/export-excel")
     @Operation(summary = "导出论坛 Excel")
     @PreAuthorize("@ss.hasPermission('tylx:forum:export')")

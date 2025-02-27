@@ -68,7 +68,7 @@
 
 <script>
 import { getDestinationPage } from '@/api/destination';
-import { getTeamPage } from '@/api/team';
+import { getJoinTeamPage } from '@/api/team';
 
 export default {
   data() {
@@ -125,7 +125,7 @@ export default {
           params.destinationId = this.currentDestination;
         }
 
-        const res = await getTeamPage(params);
+        const res = await getJoinTeamPage(params);
         if (res.code === 0) {
           this.newList = res.data.list.map((item) => ({
             id: item.id,

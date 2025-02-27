@@ -2,6 +2,8 @@ package cn.iocoder.yudao.module.tylx.service.destination;
 
 import java.util.*;
 import javax.validation.*;
+
+import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.tylx.controller.admin.destination.vo.*;
 import cn.iocoder.yudao.module.tylx.dal.dataobject.destination.DestinationDO;
 import cn.iocoder.yudao.module.tylx.dal.dataobject.destinationfood.DestinationFoodDO;
@@ -74,4 +76,9 @@ public interface DestinationService {
      */
     List<DestinationSceneryDO> getDestinationSceneryListByDestinationId(Long destinationId);
 
+    PageResult<cn.iocoder.yudao.module.tylx.dal.dataobject.destinationscenery.DestinationSceneryDO> getDestinationPageScenery(DestinationPageReqVO pageReqVO);
+
+    CommonResult<cn.iocoder.yudao.module.tylx.dal.dataobject.destinationscenery.DestinationSceneryDO> getScenery(Long id);
+
+    CommonResult<cn.iocoder.yudao.module.tylx.dal.dataobject.destinationfood.DestinationFoodDO> getFood(Long id);
 }

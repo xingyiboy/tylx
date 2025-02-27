@@ -34,7 +34,9 @@ export function getTenantIdByName(name) {
   return request({
     url: '/system/tenant/get-id-by-name',
     method: 'GET',
-    params: { name }
+    params: {
+      name
+    }
   });
 }
 

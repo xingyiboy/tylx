@@ -106,4 +106,24 @@ public class DestinationController {
         return success(destinationService.getDestinationSceneryListByDestinationId(destinationId));
     }
 
+    @GetMapping("/getScenery")
+    @Operation(summary = "获得景点")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    public CommonResult<DestinationSceneryDO> getScenery(@RequestParam("id") Long id) {
+        return destinationService.getScenery(id);
+    }
+    @GetMapping("/getFood")
+    @Operation(summary = "获得美食")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    public CommonResult<DestinationFoodDO> getFood(@RequestParam("id") Long id) {
+        return destinationService.getFood(id);
+    }
+
+    @GetMapping("/pageScenery")
+    @Operation(summary = "获得景点分页")
+    public CommonResult<PageResult<DestinationSceneryDO>> getDestinationPageScenery(@Valid DestinationPageReqVO pageReqVO) {
+        PageResult<DestinationSceneryDO> pageResult = destinationService.getDestinationPageScenery(pageReqVO);
+        return success(pageResult);
+    }
+
 }

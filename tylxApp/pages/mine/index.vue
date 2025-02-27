@@ -15,32 +15,32 @@
           </view>
         </view>
         <view class="stat-item">
-          <view class="value">880.88</view>
+          <view class="value">{{ money }}</view>
           <view class="label">账户(¥)</view>
         </view>
       </view>
 
       <!-- 快捷功能区 -->
       <view class="quick-actions">
-        <view class="action-item">
+        <view @click="goToMyTeam" class="action-item">
           <view class="icon-wrapper">
             <view class="iconfont icon-service"></view>
           </view>
           <text>我的组队</text>
         </view>
         <view class="action-item">
-          <view class="icon-wrapper">
+          <view @click="goToJoinTeam" class="icon-wrapper">
             <view class="iconfont icon-user"></view>
           </view>
           <text>报名队伍</text>
         </view>
-        <view class="action-item">
+        <view @click="goToMyForum" class="action-item">
           <view class="icon-wrapper">
             <view class="iconfont icon-community"></view>
           </view>
           <text>我的攻略</text>
         </view>
-        <view class="action-item">
+        <view @click="goToMoney" class="action-item">
           <view class="icon-wrapper">
             <view class="iconfont icon-code"></view>
           </view>
@@ -70,26 +70,6 @@
           </view>
           <view class="iconfont icon-right arrow"></view>
         </view>
-
-        <view class="menu-item" @click="handleAbout">
-          <view class="menu-item-content">
-            <view class="icon-wrapper">
-              <view class="iconfont icon-aixin"></view>
-            </view>
-            <text>视频收藏</text>
-          </view>
-          <view class="iconfont icon-right arrow"></view>
-        </view>
-
-        <view class="menu-item" @click="handleToSetting">
-          <view class="menu-item-content">
-            <view class="icon-wrapper">
-              <view class="iconfont icon-edit"></view>
-            </view>
-            <text>历史记录</text>
-          </view>
-          <view class="iconfont icon-right arrow"></view>
-        </view>
       </view>
     </view>
 
@@ -107,13 +87,15 @@ import storage from '@/utils/storage';
 export default {
   data() {
     return {
-      version: getApp().globalData.config.appInfo.version,
-      windowHeight: uni.getSystemInfoSync().windowHeight
+      version: getApp().globalData.config.appInfo.version
     };
   },
   computed: {
     name() {
       return this.$store.state.user.name;
+    },
+    money() {
+      return this.$store.state.user.money;
     },
     avatar() {
       return this.$store.state.user.avatar;
@@ -126,14 +108,8 @@ export default {
     handleToPwd() {
       this.$tab.navigateTo('/pages/mine/pwd/index');
     },
-    handleToUpgrade() {
-      this.$modal.showToast('模块建设中~');
-    },
-    handleCleanTmp() {
-      this.$modal.showToast('模块建设中~');
-    },
     handleLogout() {
-      this.$modal.confirm('确定注销并退出系统吗？').then(() => {
+      this.$modal.confirm('确定退出系统吗？').then(() => {
         this.$store.dispatch('LogOut').then(() => {
           this.$tab.reLaunch('/pages/index');
         });
@@ -154,13 +130,6 @@ export default {
     handleToAvatar() {
       this.$tab.navigateTo('/pages/mine/avatar/index');
     },
-    handleLogout() {
-      this.$modal.confirm('确定注销并退出系统吗？').then(() => {
-        this.$store.dispatch('LogOut').then(() => {
-          this.$tab.reLaunch('/pages/index');
-        });
-      });
-    },
     handleHelp() {
       this.$tab.navigateTo('/pages/mine/help/index');
     },
@@ -172,6 +141,22 @@ export default {
     },
     handleBuilding() {
       this.$modal.showToast('模块建设中~');
+    },
+    // 跳转到我的组队
+    goToMyTeam() {
+      this.$tab.navigateTo('/pages/team/my')
+    },
+    // 跳转到报名队伍
+    goToJoinTeam() {
+      this.$tab.navigateTo('/pages/team/join')
+    },
+    // 跳转到我的攻略
+    goToMyForum() {
+      this.$tab.navigateTo('/pages/forum/my')
+    },
+    // 跳转到充值页面
+    goToMoney() {
+      this.$tab.navigateTo('/pages/mine/money')
     }
   }
 };
@@ -337,6 +322,7 @@ export default {
     }
   }
 }
+
 .stat-item {
   text-align: center;
 

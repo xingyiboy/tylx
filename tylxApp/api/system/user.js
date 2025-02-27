@@ -27,6 +27,17 @@ export function uploadFile(file) {
   });
 }
 
+// 获取字典
+export function getDictDataListByType(type) {
+  return request({
+    url: '/system/dict-data/type',
+    method: 'GET',
+    params: {
+      type
+    }
+  });
+}
+
 // 用户密码重置
 export function updateUserPwd(data) {
   return request({

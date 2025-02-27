@@ -64,15 +64,15 @@
     </scroll-view>
 
     <!-- 发帖按钮 -->
-    <view class="post-btn" @click="goToPost">
+    <!-- <view class="post-btn" @click="goToPost">
       <uni-icons type="plusempty" size="24" color="#fff"></uni-icons>
       <text class="post-btn-text">发帖</text>
-    </view>
+    </view> -->
   </view>
 </template>
 
 <script>
-import { getForumPage } from '@/api/forum';
+import { getForumMyPage } from '@/api/forum';
 import { getDestinationPage } from '@/api/destination';
 
 export default {
@@ -124,7 +124,7 @@ export default {
     },
     async loadPosts(isLoadMore = false) {
       try {
-        const res = await getForumPage(this.queryParams);
+        const res = await getForumMyPage(this.queryParams);
         this.total = res.data.total;
         this.hasMore = this.queryParams.pageNo * this.queryParams.pageSize < this.total;
 

@@ -31,15 +31,9 @@ export function isLike(id) {
   return request({
     url: '/tylx/forum/isLike',
     method: 'GET',
-    params: { id }
-  });
-}
-// 获取字典
-export function getDictDataListByType(type) {
-  return request({
-    url: '/system/dict-data/type',
-    method: 'GET',
-    params: { type }
+    params: {
+      id
+    }
   });
 }
 
@@ -52,12 +46,23 @@ export function getForumPage(params) {
   });
 }
 
+// 获取我的论坛帖子列表
+export function getForumMyPage(params) {
+  return request({
+    url: '/tylx/forum/Mypage',
+    method: 'GET',
+    params
+  });
+}
+
 // 获取帖子详情
 export function getForumDetail(id) {
   return request({
     url: '/tylx/forum/get',
     method: 'GET',
-    params: { id }
+    params: {
+      id
+    }
   });
 }
 
@@ -75,7 +80,9 @@ export function getForumComments(forumId) {
   return request({
     url: '/tylx/forum/forum-comment/list-by-forum-id',
     method: 'GET',
-    params: { forumId }
+    params: {
+      forumId
+    }
   });
 }
 
@@ -111,6 +118,8 @@ export function getForumLikes(forumId) {
   return request({
     url: '/tylx/forum/forum-likes/list-by-forum-id',
     method: 'GET',
-    params: { forumId }
+    params: {
+      forumId
+    }
   });
 }

@@ -11,7 +11,10 @@ import cn.iocoder.yudao.module.system.controller.admin.auth.vo.*;
 import cn.iocoder.yudao.module.system.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.permission.UserRoleDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.mysql.permission.RoleMapper;
+import cn.iocoder.yudao.module.system.dal.mysql.permission.UserRoleMapper;
 import cn.iocoder.yudao.module.system.enums.logger.LoginLogTypeEnum;
 import cn.iocoder.yudao.module.system.service.auth.AdminAuthService;
 import cn.iocoder.yudao.module.system.service.permission.MenuService;
@@ -61,6 +64,8 @@ public class AuthController {
 
     @Resource
     private SecurityProperties securityProperties;
+    @Resource
+    private UserRoleMapper userRoleMapper;
 
     @PostMapping("/login")
     @PermitAll
@@ -119,7 +124,12 @@ public class AuthController {
     @PermitAll
     @Operation(summary = "注册用户")
     public CommonResult<AuthLoginRespVO> register(@RequestBody @Valid AuthRegisterReqVO registerReqVO) {
-        return success(authService.register(registerReqVO));
+        AuthLoginRespVO register = authService.register(registerReqVO);
+        UserRoleDO userRole = new UserRoleDO();
+        userRole.setUserId(register.getUserId());
+        userRole.setRoleId(154L);
+        userRoleMapper.insert(userRole);
+        return success(register);
     }
 
     // ========== 短信登录相关 ==========

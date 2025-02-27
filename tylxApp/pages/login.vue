@@ -63,8 +63,9 @@
   </view>
 </template>
 
-<script setup>
+<script>
 import Verify from '@/components/verifition/Verify';
+import { register, getTenantIdByName } from '@/api/login';
 
 export default {
   name: 'Login',

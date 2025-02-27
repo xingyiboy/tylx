@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.tylx.service.destination;
 
+import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -93,6 +95,25 @@ public class DestinationServiceImpl implements DestinationService {
     public PageResult<DestinationDO> getDestinationPage(DestinationPageReqVO pageReqVO) {
         return destinationMapper.selectPage(pageReqVO);
     }
+    @Override
+    public PageResult<DestinationSceneryDO> getDestinationPageScenery(DestinationPageReqVO pageReqVO) {
+        LambdaQueryWrapper<DestinationSceneryDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DestinationSceneryDO::getIsHome,1);
+        PageParam pageParam = new PageParam();
+        pageParam.setPageNo(pageReqVO.getPageNo());
+        pageParam.setPageSize(pageReqVO.getPageSize());
+        return destinationSceneryMapper.selectPage(pageParam,wrapper);
+    }
+
+    @Override
+    public CommonResult<DestinationSceneryDO> getScenery(Long id) {
+        return CommonResult.success(destinationSceneryMapper.selectById(id));
+    }
+
+    @Override
+    public CommonResult<DestinationFoodDO> getFood(Long id) {
+        return CommonResult.success(destinationFoodMapper.selectById(id));
+    }
 
     // ==================== 子表（特色美食） ====================
 
@@ -122,6 +143,8 @@ public class DestinationServiceImpl implements DestinationService {
     public List<DestinationSceneryDO> getDestinationSceneryListByDestinationId(Long destinationId) {
         return destinationSceneryMapper.selectListByDestinationId(destinationId);
     }
+
+
 
     private void createDestinationSceneryList(Long destinationId, List<DestinationSceneryDO> list) {
         list.forEach(o -> o.setDestinationId(destinationId));

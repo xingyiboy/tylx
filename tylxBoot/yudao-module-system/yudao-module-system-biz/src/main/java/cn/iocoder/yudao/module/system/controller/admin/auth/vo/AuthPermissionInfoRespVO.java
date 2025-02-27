@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +47,8 @@ public class AuthPermissionInfoRespVO {
 
         @Schema(description = "部门编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2048")
         private Long deptId;
+
+        private BigDecimal money;
 
     }
 

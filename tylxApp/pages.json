@@ -84,6 +84,56 @@
     "style": {
       "navigationBarTitleText": "攻略"
     }
+  }, {
+    "path": "pages/destination/index",
+    "style": {
+      "navigationBarTitleText": "目的地"
+    }
+  }, {
+    "path": "pages/destination/food",
+    "style": {
+      "navigationBarTitleText": "美食"
+    }
+  }, {
+    "path": "pages/destination/scenery",
+    "style": {
+      "navigationBarTitleText": "景点"
+    }
+  }, {
+    "path": "pages/team/index",
+    "style": {
+      "navigationBarTitleText": "组队"
+    }
+  }, {
+    "path": "pages/team/chat",
+    "style": {
+      "navigationBarTitleText": "组队聊天室"
+    }
+  }, {
+    "path": "pages/team/add",
+    "style": {
+      "navigationBarTitleText": "发布组队"
+    }
+  }, {
+    "path": "pages/mine/money",
+    "style": {
+      "navigationBarTitleText": "充值金额"
+    }
+  }, {
+    "path": "pages/team/join",
+    "style": {
+      "navigationBarTitleText": "报名的队伍"
+    }
+  }, {
+    "path": "pages/team/my",
+    "style": {
+      "navigationBarTitleText": "我的组队"
+    }
+  }, {
+    "path": "pages/forum/my",
+    "style": {
+      "navigationBarTitleText": "我的攻略"
+    }
   }],
   "tabBar": {
     "color": "#000000",
