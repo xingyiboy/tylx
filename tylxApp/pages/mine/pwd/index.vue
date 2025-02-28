@@ -71,9 +71,6 @@ export default {
       this.$refs.form.validate().then((res) => {
         updateUserPwd({ oldPassword: this.user.oldPassword, newPassword: this.user.newPassword }).then((response) => {
           this.$modal.msgSuccess('修改成功');
-          this.$store.dispatch('LogOut').then(() => {
-            this.$tab.reLaunch('/pages/index');
-          });
         });
       });
     }
