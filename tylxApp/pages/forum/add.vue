@@ -8,7 +8,8 @@
 
       <!-- 分类 - 改为下拉搜索 -->
       <uni-forms-item name="destinationId" label="目的地：">
-        <uni-combox v-model="selectedDestinationName" :candidates="categories" placeholder="请选择或搜索目的地" @input="handleDestinationInput"></uni-combox>
+        <uni-combox v-model="selectedDestinationName" :candidates="categories" placeholder="请选择或搜索目的地"
+          @input="handleDestinationInput"></uni-combox>
       </uni-forms-item>
 
       <!-- 简介 -->
@@ -24,13 +25,13 @@
       <!-- 首页图片 -->
       <uni-forms-item name="picture" label="首页图片：">
         <view class="upload-box">
-          <view class="upload-item" v-if="formData.picture">
-            <image :src="formData.picture" mode="aspectFill"></image>
-            <view class="delete-btn" @click="deletePicture">
+          <view class="upload-item" v-for="(pic, index) in pictureList" :key="index">
+            <image :src="pic" mode="aspectFill"></image>
+            <view class="delete-btn" @click="deletePicture(index)">
               <uni-icons type="trash" size="20" color="#fff"></uni-icons>
             </view>
           </view>
-          <view v-else class="upload-btn" @click="choosePicture">
+          <view v-if="pictureList.length < 9" class="upload-btn" @click="choosePicture">
             <uni-icons type="plusempty" size="30" color="#999"></uni-icons>
             <text>上传图片</text>
           </view>
@@ -105,7 +106,8 @@ export default {
             }
           ]
         }
-      }
+      },
+      pictureList: []
     };
   },
   components: {
@@ -150,27 +152,26 @@ export default {
     },
     async choosePicture() {
       uni.chooseImage({
-        count: 1,
+        count: 9 - this.pictureList.length,
         sizeType: ['compressed'],
         sourceType: ['album', 'camera'],
         success: async (res) => {
           try {
             uni.showLoading({ title: '上传中...' });
 
-            const uploadRes = await uploadFile(res.tempFilePaths[0]);
-
-            if (uploadRes.code === 0) {
-              this.formData.picture = uploadRes.data;
-              uni.showToast({
-                title: '上传成功',
-                icon: 'success'
-              });
-            } else {
-              uni.showToast({
-                title: uploadRes.msg || '上传失败',
-                icon: 'none'
-              });
+            for (let tempFilePath of res.tempFilePaths) {
+              const uploadRes = await uploadFile(tempFilePath);
+              if (uploadRes.code === 0) {
+                this.pictureList.push(uploadRes.data);
+              }
             }
+
+            this.formData.picture = this.pictureList.join(',');
+
+            uni.showToast({
+              title: '上传成功',
+              icon: 'success'
+            });
           } catch (error) {
             console.error('上传失败：', error);
             uni.showToast({
@@ -180,18 +181,12 @@ export default {
           } finally {
             uni.hideLoading();
           }
-        },
-        fail: (error) => {
-          console.error('选择图片失败：', error);
-          uni.showToast({
-            title: '选择图片失败',
-            icon: 'none'
-          });
         }
       });
     },
-    deletePicture() {
-      this.formData.picture = '';
+    deletePicture(index) {
+      this.pictureList.splice(index, 1);
+      this.formData.picture = this.pictureList.join(',');
     },
     submitForm() {
       // 直接检查必填字段
@@ -266,8 +261,8 @@ export default {
 }
 
 .upload-box {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20rpx;
 }
 

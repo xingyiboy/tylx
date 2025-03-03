@@ -1,6 +1,14 @@
 import request from '@/utils/request';
 
 // 获取目的地分页列表
+export function getDestinationList(params) {
+  return request({
+    url: '/tylx/destination2/list',
+    method: 'get',
+    params
+  });
+}
+// 获取目的地分页列表
 export function getDestinationPage(params) {
   return request({
     url: '/tylx/destination/page',
@@ -34,8 +42,6 @@ export function getDestinationSceneryList(destinationId) {
     params: { destinationId }
   });
 }
-
-// ... existing code ...
 
 // 获取景点详情
 export function getDestinationSceneryDetail(id) {

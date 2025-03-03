@@ -10,7 +10,7 @@
         :formatter="dateFormatter"
         width="180px"
       />
-       <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="用户编号" align="center" prop="userId" />
     </el-table>
   </ContentWrap>
 </template>

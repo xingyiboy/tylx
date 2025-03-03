@@ -37,13 +37,8 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="状态 0招募中 1招募结束" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="请选择状态 0招募中 1招募结束"
-          clearable
-          class="!w-240px"
-        >
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.TYLX_TEAM_STATUS)"
             :key="dict.value"
@@ -141,10 +136,10 @@
         width="180px"
       />
       <el-table-column label="目的地编号" align="center" prop="destinationId" />
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="用户名称" align="center" prop="userName" />
       <el-table-column label="简介" align="center" prop="detail" />
       <el-table-column label="内容" align="center" prop="content" />
-      <el-table-column label="状态 0招募中 1招募结束" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.TYLX_TEAM_STATUS" :value="scope.row.status" />
         </template>

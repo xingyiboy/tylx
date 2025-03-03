@@ -216,4 +216,9 @@ public interface AdminUserService {
      */
     boolean isPasswordMatch(String rawPassword, String encodedPassword);
 
+    /**
+     * 获取用户数量
+     * @return
+     */
+    Long getUserCount();
 }

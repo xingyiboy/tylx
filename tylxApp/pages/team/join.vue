@@ -2,8 +2,16 @@
   <view class="team-container">
     <!-- 目的地筛选区 -->
     <view class="filter-section">
+      <!-- 一级目的地 -->
       <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
-        <view class="filter-item" v-for="(item, index) in destinations" :key="index" :class="{ active: currentDestination === item.id }" @tap="selectDestination(item.id)">
+        <view class="filter-item" v-for="(item, index) in topDestinations" :key="index" :class="{ active: currentTopDestination === item.id }" @tap="selectTopDestination(item.id)">
+          {{ item.name }}
+        </view>
+      </scroll-view>
+
+      <!-- 二级目的地 -->
+      <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false" v-if="subDestinations.length">
+        <view class="filter-item" v-for="(item, index) in subDestinations" :key="index" :class="{ active: currentDestination === item.id }" @tap="selectDestination(item.id)">
           {{ item.name }}
         </view>
       </scroll-view>
@@ -67,14 +75,17 @@
 </template>
 
 <script>
-import { getDestinationPage } from '@/api/destination';
+import { getDestinationList } from '@/api/destination';
 import { getJoinTeamPage } from '@/api/team';
 
 export default {
   data() {
     return {
-      currentDestination: 0,
-      destinations: [{ id: 0, name: '全部' }],
+      currentTopDestination: 0, // 当前选中的一级目的地
+      currentDestination: 0, // 当前选中的二级目的地
+      destinations: [], // 所有目的地数据
+      topDestinations: [], // 一级目的地
+      subDestinations: [], // 二级目的地
       teamList: [],
       isRefreshing: false,
       hasMore: true,
@@ -92,11 +103,67 @@ export default {
   },
 
   methods: {
+    // 加载目的地列表
+    async loadDestinations() {
+      try {
+        const res = await getDestinationList({
+          pageNo: 1,
+          pageSize: 100
+        });
+
+        if (res.code === 0) {
+          this.destinations = res.data;
+
+          // 处理一级目的地
+          this.topDestinations = [
+            { id: 0, name: '全部' },
+            ...this.destinations
+              .filter((item) => !item.parentId) // 筛选 parentId 为 0 或空的记录
+              .map((item) => ({
+                id: item.id,
+                name: item.name
+              }))
+          ];
+        }
+      } catch (error) {
+        console.error('加载目的地列表失败:', error);
+        uni.showToast({
+          title: '加载目的地失败',
+          icon: 'none'
+        });
+      }
+    },
+
+    // 选择一级目的地
+    selectTopDestination(id) {
+      this.currentTopDestination = id;
+      if (!id) {
+        // 点击"全部"时清空二级目的地
+        this.subDestinations = [];
+        this.currentDestination = 0;
+      } else {
+        // 加载二级目的地
+        this.subDestinations = [
+          ...this.destinations
+            .filter((item) => item.parentId === id)
+            .map((item) => ({
+              id: item.id,
+              name: item.name
+            }))
+        ];
+      }
+      // 重置查询参数
+      this.queryParams.pageNo = 1;
+      this.loadTeamList();
+    },
+
+    // 选择二级目的地
     selectDestination(id) {
       this.currentDestination = id;
       this.queryParams.pageNo = 1;
       this.loadTeamList();
     },
+
     goToTeamDetail(id) {
       uni.navigateTo({
         url: `/pages/team/index?id=${id}`
@@ -121,8 +188,11 @@ export default {
     async loadTeamList() {
       try {
         const params = { ...this.queryParams };
+        // 根据选择的分类设置查询参数
         if (this.currentDestination !== 0) {
           params.destinationId = this.currentDestination;
+        } else if (this.currentTopDestination !== 0) {
+          params.destinationId = this.currentTopDestination;
         }
 
         const res = await getJoinTeamPage(params);
@@ -166,32 +236,6 @@ export default {
       if (!dateStr) return '';
       const date = new Date(dateStr);
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    },
-    // 加载目的地列表
-    async loadDestinations() {
-      try {
-        const res = await getDestinationPage({
-          pageNo: 1,
-          pageSize: 100 // 获取足够多的目的地
-        });
-
-        if (res.code === 0) {
-          // 合并"全部"选项和接口返回的目的地列表
-          this.destinations = [
-            { id: 0, name: '全部' },
-            ...res.data.list.map((item) => ({
-              id: item.id,
-              name: item.name
-            }))
-          ];
-        }
-      } catch (error) {
-        console.error('加载目的地列表失败:', error);
-        uni.showToast({
-          title: '加载目的地失败',
-          icon: 'none'
-        });
-      }
     }
   }
 };
@@ -206,15 +250,21 @@ export default {
 
 .filter-section {
   background-color: #fff;
-  padding: 20rpx 0;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-scroll {
   white-space: nowrap;
-  padding: 0 20rpx;
+  padding: 20rpx;
+}
+
+.filter-scroll:first-child {
+  border-bottom: 1rpx solid #f0f2f5;
 }
 
 .filter-item {

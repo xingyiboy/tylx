@@ -519,6 +519,16 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     /**
+     * 获取用户数量
+     *
+     * @return
+     */
+    @Override
+    public Long getUserCount() {
+        return userMapper.selectCount();
+    }
+
+    /**
      * 对密码进行加密
      *
      * @param password 密码

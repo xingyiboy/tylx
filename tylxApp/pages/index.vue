@@ -9,6 +9,12 @@
         </view>
       </view>
     </view>
+
+    <!-- 添加无搜索结果提示 -->
+    <view v-if="searchKeyword && searchResults.length === 0" class="no-result">
+      <text class="no-result-text">暂无相关搜索结果</text>
+    </view>
+
     <view v-for="item in searchResults" :key="item.id">
       <view class="search-item" @click="handleSelectDestination(item)">
         <image v-if="item.picture" :src="item.picture" mode="aspectFill" class="item-image"></image>
@@ -407,5 +413,21 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
+}
+
+.no-result {
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.no-result-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+}
+
+.no-result-text {
+  font-size: 28rpx;
+  color: #999;
 }
 </style>

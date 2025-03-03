@@ -16,6 +16,13 @@ public interface ErrorCodeConstants {
     // ========== 队伍 TODO 补充编号 ==========
     ErrorCode TEAM_NOT_EXISTS = new ErrorCode(1-040-000-002, "队伍不存在");
 
+    ErrorCode DESTINATION2_NOT_EXISTS = new ErrorCode(1-040-000-002, "目的地树表不存在");
+    ErrorCode DESTINATION2_EXITS_CHILDREN = new ErrorCode(1-040-000-002, "存在存在子目的地树表，无法删除");
+    ErrorCode DESTINATION2_PARENT_NOT_EXITS = new ErrorCode(1-040-000-002,"父级目的地树表不存在");
+    ErrorCode DESTINATION2_PARENT_ERROR = new ErrorCode(1-040-000-002, "不能设置自己为父目的地树表");
+    ErrorCode DESTINATION2_NAME_DUPLICATE = new ErrorCode(1-040-000-002, "已经存在该目的地名称的目的地树表");
+    ErrorCode DESTINATION2_PARENT_IS_CHILD = new ErrorCode(1-040-000-002, "不能设置自己的子Destination2为父Destination2");
+
 }
 
 

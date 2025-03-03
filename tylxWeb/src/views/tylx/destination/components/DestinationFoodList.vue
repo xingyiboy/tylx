@@ -10,7 +10,7 @@
         :formatter="dateFormatter"
         width="180px"
       />
-       <el-table-column label="美食名称" align="center" prop="name" />
+      <el-table-column label="美食名称" align="center" prop="name" />
       <el-table-column label="首页图片" align="center" prop="picture" />
       <el-table-column label="简介" align="center" prop="detail" />
       <el-table-column label="内容" align="center" prop="content" />

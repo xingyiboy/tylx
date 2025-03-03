@@ -2,9 +2,24 @@
   <view class="forum-container">
     <!-- 分类导航 -->
     <view class="category-wrapper">
+      <!-- 一级分类 -->
       <scroll-view scroll-x class="category-scroll" :show-scrollbar="false">
         <view class="category-list">
-          <view v-for="(item, index) in categories" :key="index" :class="['category-item', { active: currentCategory === item.value }]" @click="switchCategory(item.value)">
+          <view
+            v-for="(item, index) in topCategories"
+            :key="index"
+            :class="['category-item', { active: currentTopCategory === item.value }]"
+            @click="switchTopCategory(item.value)"
+          >
+            {{ item.label }}
+          </view>
+        </view>
+      </scroll-view>
+
+      <!-- 二级分类 -->
+      <scroll-view scroll-x class="category-scroll" :show-scrollbar="false" v-if="subCategories.length">
+        <view class="category-list">
+          <view v-for="(item, index) in subCategories" :key="index" :class="['category-item', { active: currentCategory === item.value }]" @click="switchCategory(item.value)">
             {{ item.label }}
           </view>
         </view>
@@ -29,7 +44,7 @@
           <view class="post-title">{{ item.title }}</view>
           <view class="post-text">{{ item.introduce }}</view>
           <view class="post-images" v-if="item.picture">
-            <image :src="item.picture" mode="aspectFill"></image>
+            <image v-for="(pic, picIndex) in item.picture.split(',')" :key="picIndex" :src="pic" mode="aspectFill"></image>
           </view>
         </view>
 
@@ -64,22 +79,25 @@
     </scroll-view>
 
     <!-- 发帖按钮 -->
-    <!-- <view class="post-btn" @click="goToPost">
+    <view class="post-btn" @click="goToPost">
       <uni-icons type="plusempty" size="24" color="#fff"></uni-icons>
       <text class="post-btn-text">发帖</text>
-    </view> -->
+    </view>
   </view>
 </template>
 
 <script>
 import { getForumMyPage } from '@/api/forum';
-import { getDestinationPage } from '@/api/destination';
+import { getDestinationList, getDestinationPage } from '@/api/destination';
 
 export default {
   data() {
     return {
+      currentTopCategory: '',
       currentCategory: '',
       categories: [],
+      topCategories: [],
+      subCategories: [],
       postList: [],
       isRefreshing: false,
       queryParams: {
@@ -89,7 +107,8 @@ export default {
       },
       total: 0,
       hasMore: true,
-      destinationOptions: []
+      destinationOptions: [],
+      totalCategories: []
     };
   },
   onLoad() {
@@ -104,16 +123,26 @@ export default {
   methods: {
     async loadCategories() {
       try {
-        const res = await getDestinationPage({
+        const res = await getDestinationList({
           pageNo: 1,
-          pageSize: 100 // 根据实际情况调整页面大小
+          pageSize: 100
         });
-        this.categories = [
-          { value: '', label: '全部' },
-          ...res.data.list.map((item) => ({
-            value: item.id,
-            label: item.name
-          }))
+        const res2 = await getDestinationPage({
+          pageNo: 1,
+          pageSize: 100
+        });
+        this.totalCategories = res2.data.list;
+        this.categories = res.data;
+
+        // 处理一级分类，添加"全部"选项
+        this.topCategories = [
+          { value: '', label: '全部' }, // 添加全部选项
+          ...this.categories
+            .filter((item) => !item.parentId)
+            .map((item) => ({
+              value: item.id,
+              label: item.name
+            }))
         ];
       } catch (error) {
         uni.showToast({
@@ -140,9 +169,31 @@ export default {
         });
       }
     },
+    switchTopCategory(category) {
+      this.currentTopCategory = category;
+      if (!category) {
+        // 点击"全部"时清空二级分类
+        this.subCategories = [];
+        this.currentCategory = '';
+      } else {
+        // 加载二级分类
+        this.subCategories = [
+          ...this.categories
+            .filter((item) => item.parentId === category)
+            .map((item) => ({
+              value: item.id,
+              label: item.name
+            }))
+        ];
+      }
+      // 重置查询参数
+      this.queryParams.destinationId = category;
+      this.queryParams.pageNo = 1;
+      this.loadPosts();
+    },
     switchCategory(category) {
       this.currentCategory = category;
-      this.queryParams.destinationId = category;
+      this.queryParams.destinationId = category || this.currentTopCategory;
       this.queryParams.pageNo = 1;
       this.loadPosts();
     },
@@ -168,8 +219,8 @@ export default {
       });
     },
     getCategoryName(value) {
-      const category = this.categories.find((item) => item.value === value);
-      return category ? category.label : '';
+      const category = this.totalCategories.find((item) => item.id === value);
+      return category ? category.name : '';
     },
     formatDate(timestamp) {
       if (!timestamp) return '';
@@ -179,11 +230,11 @@ export default {
       ).padStart(2, '0')}`;
     },
     async loadDestinationOptions() {
-      const res = await getDestinationPage({
+      const res = await getDestinationList({
         pageNo: 1,
         pageSize: 100 // 根据实际情况调整页面大小
       });
-      this.destinationOptions = res.data.list.map((item) => ({
+      this.destinationOptions = res.data.map((item) => ({
         value: item.id,
         label: item.name
       }));
@@ -204,11 +255,17 @@ export default {
   z-index: 99;
   background: #fff;
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
 }
 
 .category-scroll {
-  padding: 20rpx 0;
+  padding: 16rpx 0;
   white-space: nowrap;
+
+  &:first-child {
+    border-bottom: 1rpx solid #f0f2f5;
+  }
 }
 
 .category-list {
@@ -311,12 +368,15 @@ export default {
 }
 
 .post-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
   border-radius: 12rpx;
   overflow: hidden;
 
   image {
     width: 100%;
-    height: 300rpx;
+    height: 200rpx;
     object-fit: cover;
   }
 }

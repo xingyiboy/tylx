@@ -79,3 +79,8 @@ export const updateUserStatus = (id: number, status: number) => {
 export const getSimpleUserList = (): Promise<UserVO[]> => {
   return request.get({ url: '/system/user/simple-list' })
 }
+
+// 获取用户数量
+export const getUserCount = () => {
+  return request.get({ url: '/system/user/count' })
+}

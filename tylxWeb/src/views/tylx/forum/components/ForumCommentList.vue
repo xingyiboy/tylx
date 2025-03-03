@@ -1,3 +1,11 @@
+<!--
+ * @Author: xingyi 2416820386@qq.com
+ * @Date: 2025-02-24 16:33:06
+ * @LastEditors: xingyi 2416820386@qq.com
+ * @LastEditTime: 2025-03-01 13:03:15
+ * @FilePath: \tylxWeb\src\views\tylx\forum\components\ForumCommentList.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <!-- 列表 -->
   <ContentWrap>
@@ -10,8 +18,8 @@
         :formatter="dateFormatter"
         width="180px"
       />
-       <el-table-column label="评论内容" align="center" prop="content" />
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="评论内容" align="center" prop="content" />
+      <el-table-column label="用户" align="center" prop="userName" />
     </el-table>
   </ContentWrap>
 </template>

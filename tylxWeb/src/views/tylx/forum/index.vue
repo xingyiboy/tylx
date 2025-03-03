@@ -143,7 +143,7 @@
       <el-table-column label="首页标题" align="center" prop="title" />
       <el-table-column label="内容" align="center" prop="content" />
       <el-table-column label="简介" align="center" prop="introduce" />
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="用户名称" align="center" prop="userName" />
       <el-table-column label="目的地编号" align="center" prop="destinationId" />
       <el-table-column label="阅读量" align="center" prop="view" />
       <el-table-column label="点赞量" align="center" prop="likes" />

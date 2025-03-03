@@ -8,7 +8,7 @@
       v-loading="formLoading"
     >
       <el-form-item label="首页图片" prop="picture">
-        <UploadImg v-model="formData.picture" />
+        <MultipleUpload v-model="formData.picture" :limit="9" />
       </el-form-item>
       <el-form-item label="首页标题" prop="title">
         <el-input v-model="formData.title" placeholder="请输入首页标题" />
@@ -69,6 +69,7 @@ import { ForumApi, ForumVO } from '@/api/tylx/forum'
 import ForumCommentForm from './components/ForumCommentForm.vue'
 import ForumLikesForm from './components/ForumLikesForm.vue'
 import ForumRewardForm from './components/ForumRewardForm.vue'
+import MultipleUpload from '@/components/MultipleUpload/index.vue'
 
 /** 论坛 表单 */
 defineOptions({ name: 'ForumForm' })
@@ -93,8 +94,7 @@ const formData = ref({
   comment: undefined,
   isHome: undefined
 })
-const formRules = reactive({
-})
+const formRules = reactive({})
 const formRef = ref() // 表单 Ref
 
 /** 子表的表单 */

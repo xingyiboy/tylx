@@ -9,24 +9,21 @@
       <view v-if="!isRegister">
         <view class="form-item">
           <text class="error-tip" v-if="loginErrors.username">{{ loginErrors.username }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': loginErrors.username }">
+          <view class="input-item flex align-center" :class="{ error: loginErrors.username }">
             <view class="iconfont icon-user icon"></view>
-            <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30"
-              @input="clearError('username')" />
+            <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30" @input="clearError('username')" />
           </view>
         </view>
 
         <view class="form-item">
           <text class="error-tip" v-if="loginErrors.password">{{ loginErrors.password }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': loginErrors.password }">
+          <view class="input-item flex align-center" :class="{ error: loginErrors.password }">
             <view class="iconfont icon-password icon"></view>
-            <input v-model="loginForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20"
-              @input="clearError('password')" />
+            <input v-model="loginForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20" @input="clearError('password')" />
           </view>
         </view>
 
-        <Verify @success="pwdLogin" :mode="'pop'" :captchaType="'blockPuzzle'"
-          :imgSize="{ width: '330px', height: '155px' }" ref="verify"></Verify>
+        <Verify @success="pwdLogin" :mode="'pop'" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }" ref="verify"></Verify>
         <view class="action-btn">
           <button @click="handleLogin" class="login-btn cu-btn block bg-blue lg round">登录</button>
         </view>
@@ -40,42 +37,37 @@
         </view> -->
         <view class="form-item">
           <text class="error-tip" v-if="registerErrors.username">{{ registerErrors.username }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': registerErrors.username }">
+          <view class="input-item flex align-center" :class="{ error: registerErrors.username }">
             <view class="iconfont icon-user icon"></view>
-            <input v-model="registerForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30"
-              @input="clearRegisterError('username')" />
+            <input v-model="registerForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30" @input="clearRegisterError('username')" />
           </view>
         </view>
 
         <view class="form-item">
           <text class="error-tip" v-if="registerErrors.nickname">{{ registerErrors.nickname }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': registerErrors.nickname }">
+          <view class="input-item flex align-center" :class="{ error: registerErrors.nickname }">
             <view class="iconfont icon-user icon"></view>
-            <input v-model="registerForm.nickname" class="input" type="text" placeholder="请输入昵称" maxlength="30"
-              @input="clearRegisterError('nickname')" />
+            <input v-model="registerForm.nickname" class="input" type="text" placeholder="请输入昵称" maxlength="30" @input="clearRegisterError('nickname')" />
           </view>
         </view>
 
         <view class="form-item">
           <text class="error-tip" v-if="registerErrors.password">{{ registerErrors.password }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': registerErrors.password }">
+          <view class="input-item flex align-center" :class="{ error: registerErrors.password }">
             <view class="iconfont icon-password icon"></view>
-            <input v-model="registerForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20"
-              @input="clearRegisterError('password')" />
+            <input v-model="registerForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20" @input="clearRegisterError('password')" />
           </view>
         </view>
 
         <view class="form-item">
           <text class="error-tip" v-if="registerErrors.confirmPassword">{{ registerErrors.confirmPassword }}</text>
-          <view class="input-item flex align-center" :class="{ 'error': registerErrors.confirmPassword }">
+          <view class="input-item flex align-center" :class="{ error: registerErrors.confirmPassword }">
             <view class="iconfont icon-password icon"></view>
-            <input v-model="registerForm.confirmPassword" type="password" class="input" placeholder="请确认密码"
-              maxlength="20" @input="clearRegisterError('confirmPassword')" />
+            <input v-model="registerForm.confirmPassword" type="password" class="input" placeholder="请确认密码" maxlength="20" @input="clearRegisterError('confirmPassword')" />
           </view>
         </view>
 
-        <Verify @success="handleRegister" :mode="'pop'" :captchaType="'blockPuzzle'"
-          :imgSize="{ width: '330px', height: '155px' }" ref="verifyRegister"></Verify>
+        <Verify @success="handleRegister" :mode="'pop'" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }" ref="verifyRegister"></Verify>
         <view class="action-btn">
           <button @click="submitRegister" class="login-btn cu-btn block bg-blue lg round">注册</button>
         </view>
@@ -149,12 +141,12 @@ export default {
     },
     // 清除登录错误提示
     clearError(field) {
-      this.loginErrors[field] = ''
+      this.loginErrors[field] = '';
     },
 
     // 清除注册错误提示
     clearRegisterError(field) {
-      this.registerErrors[field] = ''
+      this.registerErrors[field] = '';
     },
     // 登录方法
     async handleLogin() {
@@ -162,26 +154,25 @@ export default {
       this.loginErrors = {
         username: '',
         password: ''
-      }
+      };
 
       if (this.loginForm.username === '') {
-        this.loginErrors.username = '请输入账号'
-        return
+        this.loginErrors.username = '请输入账号';
+        return;
       }
       if (this.loginForm.password === '') {
-        this.loginErrors.password = '请输入密码'
-        return
+        this.loginErrors.password = '请输入密码';
+        return;
       }
       if (this.loginForm.password.length < 4 || this.loginForm.password.length > 16) {
-        this.loginErrors.password = '密码长度需要在4-16位之间'
-        return
+        this.loginErrors.password = '密码长度需要在4-16位之间';
+        return;
       }
-
       // 显示验证码
       if (this.captchaEnabled) {
-        this.$refs.verify.show()
+        this.$refs.verify.show();
       } else {
-        await this.pwdLogin({})
+        await this.pwdLogin({});
       }
     },
     // 密码登录
@@ -214,32 +205,32 @@ export default {
         nickname: '',
         password: '',
         confirmPassword: ''
-      }
+      };
 
       // 表单验证
       if (!this.registerForm.username) {
-        this.registerErrors.username = '请输入账号'
-        return
+        this.registerErrors.username = '请输入账号';
+        return;
       }
       if (!this.registerForm.nickname) {
-        this.registerErrors.nickname = '请输入昵称'
-        return
+        this.registerErrors.nickname = '请输入昵称';
+        return;
       }
       if (!this.registerForm.password) {
-        this.registerErrors.password = '请输入密码'
-        return
+        this.registerErrors.password = '请输入密码';
+        return;
       }
       if (this.registerForm.password.length < 4 || this.registerForm.password.length > 16) {
-        this.registerErrors.password = '密码长度需要在4-16位之间'
-        return
+        this.registerErrors.password = '密码长度需要在4-16位之间';
+        return;
       }
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
-        this.registerErrors.confirmPassword = '两次输入的密码不一致'
-        return
+        this.registerErrors.confirmPassword = '两次输入的密码不一致';
+        return;
       }
 
       // 显示验证码
-      this.$refs.verifyRegister.show()
+      this.$refs.verifyRegister.show();
     },
 
     // 注册处理

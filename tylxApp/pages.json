@@ -12,12 +12,12 @@
   }, {
     "path": "pages/forum/detail",
     "style": {
-      "navigationBarTitleText": "论坛详情"
+      "navigationBarTitleText": "攻略详情"
     }
   }, {
     "path": "pages/forum/add",
     "style": {
-      "navigationBarTitleText": "新增论坛"
+      "navigationBarTitleText": "新增攻略"
     }
   }, {
     "path": "pages/work/index",
