@@ -1,20 +1,35 @@
 <template>
   <view class="team-container">
-    <!-- 目的地筛选区 -->
-    <view class="filter-section">
-      <!-- 一级目的地 -->
-      <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
-        <view class="filter-item" v-for="(item, index) in topDestinations" :key="index" :class="{ active: currentTopDestination === item.id }" @tap="selectTopDestination(item.id)">
-          {{ item.name }}
+    <!-- 搜索和筛选导航 -->
+    <view class="search-filter-wrapper">
+      <!-- 搜索框 -->
+      <view class="search-bar">
+        <view class="search-input">
+          <uni-icons type="search" size="16" color="#999"></uni-icons>
+          <input type="text" v-model="queryParams.detail" placeholder="搜索队伍简介" @input="handleSearch" />
+          <view v-if="queryParams.detail" class="clear-btn" @click="clearSearch">
+            <uni-icons type="clear" size="16" color="#999"></uni-icons>
+          </view>
         </view>
-      </scroll-view>
+      </view>
 
-      <!-- 二级目的地 -->
-      <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false" v-if="subDestinations.length">
-        <view class="filter-item" v-for="(item, index) in subDestinations" :key="index" :class="{ active: currentDestination === item.id }" @tap="selectDestination(item.id)">
-          {{ item.name }}
-        </view>
-      </scroll-view>
+      <!-- 地区筛选下拉菜单 -->
+      <view class="filter-dropdown" @click="showDropdown = !showDropdown">
+        <text>{{ currentLocation || '全国' }}</text>
+        <uni-icons :type="showDropdown ? 'top' : 'bottom'" size="14" color="#666"></uni-icons>
+      </view>
+
+      <!-- 下拉菜单内容 -->
+      <view class="dropdown-content" v-if="showDropdown">
+        <scroll-view scroll-y class="location-list">
+          <view class="location-item" @click="selectLocation('')">
+            <text :class="{ active: currentLocation === '' }">全国</text>
+          </view>
+          <view class="location-item" v-for="(item, index) in topDestinations" :key="index" @click="selectLocation(item)">
+            <text :class="{ active: currentLocation === item.name }">{{ item.name }}</text>
+          </view>
+        </scroll-view>
+      </view>
     </view>
 
     <!-- 组队列表 -->
@@ -92,8 +107,12 @@ export default {
       newList: [],
       queryParams: {
         pageNo: 1,
-        pageSize: 10
-      }
+        pageSize: 10,
+        destinationId: '',
+        title: ''
+      },
+      showDropdown: false,
+      currentLocation: ''
     };
   },
 
@@ -116,7 +135,6 @@ export default {
 
           // 处理一级目的地
           this.topDestinations = [
-            { id: 0, name: '全部' },
             ...this.destinations
               .filter((item) => !item.parentId) // 筛选 parentId 为 0 或空的记录
               .map((item) => ({
@@ -236,12 +254,27 @@ export default {
       if (!dateStr) return '';
       const date = new Date(dateStr);
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    },
+    handleSearch() {
+      this.queryParams.pageNo = 1;
+      this.loadTeamList();
+    },
+    clearSearch() {
+      this.queryParams.title = '';
+      this.queryParams.pageNo = 1;
+      this.loadTeamList();
+    },
+    selectLocation(item) {
+      this.showDropdown = false;
+      this.currentLocation = item ? item.name : '';
+      this.currentTopDestination = item ? item.id : '';
+      this.selectTopDestination(item ? item.id : '');
     }
   }
 };
 </script>
 
-<style>
+<style lang="scss">
 .team-container {
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -407,5 +440,82 @@ export default {
 .publish-btn text {
   margin-left: 10rpx;
   font-size: 28rpx;
+}
+
+.search-filter-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: #fff;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-bar {
+  flex: 1;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #f5f7fa;
+  padding: 12rpx 24rpx;
+  border-radius: 32rpx;
+
+  input {
+    flex: 1;
+    margin: 0 20rpx;
+    font-size: 28rpx;
+  }
+}
+
+.clear-btn {
+  padding: 10rpx;
+}
+
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  background: #f5f7fa;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 20rpx;
+  width: 240rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.location-list {
+  max-height: 800rpx;
+}
+
+.location-item {
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+
+  text {
+    &.active {
+      color: #4080ff;
+      font-weight: 500;
+    }
+  }
+
+  &:active {
+    background-color: #f5f7fa;
+  }
 }
 </style>

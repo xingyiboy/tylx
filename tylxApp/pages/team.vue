@@ -6,7 +6,7 @@
       <view class="search-bar">
         <view class="search-input">
           <uni-icons type="search" size="16" color="#999"></uni-icons>
-          <input type="text" v-model="queryParams.detail" placeholder="搜索队伍" @input="handleSearch" />
+          <input type="text" v-model="queryParams.detail" placeholder="搜索队伍简介" @input="handleSearch" />
           <view v-if="queryParams.detail" class="clear-btn" @click="clearSearch">
             <uni-icons type="clear" size="16" color="#999"></uni-icons>
           </view>
@@ -135,7 +135,6 @@ export default {
 
           // 处理一级目的地
           this.topDestinations = [
-            { id: 0, name: '全部' },
             ...this.destinations
               .filter((item) => !item.parentId) // 筛选 parentId 为 0 或空的记录
               .map((item) => ({
@@ -275,7 +274,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .team-container {
   min-height: 100vh;
   background-color: #f5f5f5;
