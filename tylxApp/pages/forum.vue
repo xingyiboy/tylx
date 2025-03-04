@@ -1,32 +1,41 @@
 <template>
   <view class="forum-container">
-    <!-- 分类导航 -->
-    <view class="category-wrapper">
-      <!-- 一级分类 -->
-      <scroll-view scroll-x class="category-scroll" :show-scrollbar="false">
-        <view class="category-list">
-          <view v-for="(item, index) in topCategories" :key="index"
-            :class="['category-item', { active: currentTopCategory === item.value }]"
-            @click="switchTopCategory(item.value)">
-            {{ item.label }}
+    <!-- 搜索和筛选导航 -->
+    <view class="search-filter-wrapper">
+      <!-- 搜索框 -->
+      <view class="search-bar">
+        <view class="search-input">
+          <uni-icons type="search" size="16" color="#999"></uni-icons>
+          <input type="text" v-model="queryParams.title" placeholder="搜索帖子" @input="handleSearch" />
+          <view v-if="queryParams.title" class="clear-btn" @click="clearSearch">
+            <uni-icons type="clear" size="16" color="#999"></uni-icons>
           </view>
         </view>
-      </scroll-view>
+      </view>
 
-      <!-- 二级分类 -->
-      <scroll-view scroll-x class="category-scroll" :show-scrollbar="false" v-if="subCategories.length">
-        <view class="category-list">
-          <view v-for="(item, index) in subCategories" :key="index"
-            :class="['category-item', { active: currentCategory === item.value }]" @click="switchCategory(item.value)">
-            {{ item.label }}
+      <!-- 地区筛选下拉菜单 -->
+      <view class="filter-dropdown" @click="showDropdown = !showDropdown">
+        <text>{{ currentLocation || '全国' }}</text>
+        <uni-icons :type="showDropdown ? 'top' : 'bottom'" size="14" color="#666"></uni-icons>
+      </view>
+
+      <!-- 下拉菜单内容 -->
+      <view class="dropdown-content" v-if="showDropdown">
+        <scroll-view scroll-y class="location-list">
+          <view class="location-item" @click="selectLocation('')">
+            <text :class="{ active: currentLocation === '' }">全国</text>
           </view>
-        </view>
-      </scroll-view>
+          <view class="location-item" v-for="(item, index) in topCategories" :key="index" @click="selectLocation(item)">
+            <text :class="{ active: currentLocation === item.label }">{{ item.label }}</text>
+          </view>
+        </scroll-view>
+      </view>
     </view>
 
+    <!-- 分类导航 -->
+
     <!-- 帖子列表 -->
-    <scroll-view scroll-y class="post-list" @scrolltolower="loadMore" refresher-enabled
-      :refresher-triggered="isRefreshing" @refresherrefresh="refresh">
+    <scroll-view scroll-y class="post-list" @scrolltolower="loadMore" refresher-enabled :refresher-triggered="isRefreshing" @refresherrefresh="refresh">
       <view class="post-item" v-for="(item, index) in postList" :key="index" @click="goToDetail(item.id)">
         <view class="post-header">
           <view class="user-info">
@@ -43,8 +52,7 @@
           <view class="post-title">{{ item.title }}</view>
           <view class="post-text">{{ item.introduce }}</view>
           <view class="post-images" v-if="item.picture">
-            <image v-for="(pic, picIndex) in item.picture.split(',')" :key="picIndex" :src="pic" mode="aspectFill">
-            </image>
+            <image v-for="(pic, picIndex) in item.picture.split(',')" :key="picIndex" :src="pic" mode="aspectFill"></image>
           </view>
         </view>
 
@@ -103,12 +111,16 @@ export default {
       queryParams: {
         pageNo: 1,
         pageSize: 10,
-        destinationId: ''
+        destinationId: '',
+        title: ''
       },
       total: 0,
       hasMore: true,
       destinationOptions: [],
-      totalCategories: []
+      totalCategories: [],
+      searchKeyword: '',
+      showDropdown: false,
+      currentLocation: ''
     };
   },
   onLoad() {
@@ -136,7 +148,6 @@ export default {
 
         // 处理一级分类，添加"全部"选项
         this.topCategories = [
-          { value: '', label: '全部' }, // 添加全部选项
           ...this.categories
             .filter((item) => !item.parentId)
             .map((item) => ({
@@ -238,6 +249,22 @@ export default {
         value: item.id,
         label: item.name
       }));
+    },
+    handleSearch() {
+      // 根据关键词搜索帖子
+      this.queryParams.pageNo = 1;
+      this.loadPosts();
+    },
+    clearSearch() {
+      this.searchKeyword = '';
+      this.queryParams.pageNo = 1;
+      this.loadPosts();
+    },
+    selectLocation(item) {
+      this.showDropdown = false;
+      this.currentLocation = item ? item.label : '';
+      this.currentTopCategory = item ? item.value : '';
+      this.switchTopCategory(item ? item.value : '');
     }
   }
 };
@@ -247,6 +274,83 @@ export default {
 .forum-container {
   min-height: 100vh;
   background-color: #f5f7fa;
+}
+
+.search-filter-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: #fff;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-bar {
+  flex: 1;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #f5f7fa;
+  padding: 12rpx 24rpx;
+  border-radius: 32rpx;
+
+  input {
+    flex: 1;
+    margin: 0 20rpx;
+    font-size: 28rpx;
+  }
+}
+
+.clear-btn {
+  padding: 10rpx;
+}
+
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  background: #f5f7fa;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 20rpx;
+  width: 240rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.location-list {
+  max-height: 800rpx;
+}
+
+.location-item {
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+
+  text {
+    &.active {
+      color: #4080ff;
+      font-weight: 500;
+    }
+  }
+
+  &:active {
+    background-color: #f5f7fa;
+  }
 }
 
 .category-wrapper {

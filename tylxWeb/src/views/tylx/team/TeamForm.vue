@@ -1,17 +1,21 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-      v-loading="formLoading"
-    >
-      <el-form-item label="目的地编号" prop="destinationId">
-        <el-input v-model="formData.destinationId" placeholder="请输入目的地编号" />
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="formLoading">
+      <el-form-item label="目的地" prop="destinationId">
+        <el-select v-model="formData.destinationId" filterable placeholder="请选择目的地" clearable class="!w-240px">
+          <el-option v-for="item in destinationOptions" :key="item.id" :label="item.name" :value="item.id">
+            <span>{{ item.name }}</span>
+            <span class="text-gray-400 ml-2">(ID: {{ item.id }})</span>
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="用户编号" prop="userId">
-        <el-input v-model="formData.userId" placeholder="请输入用户编号" />
+      <el-form-item label="用户" prop="userId">
+        <el-select v-model="formData.userId" filterable placeholder="请选择用户" clearable class="!w-240px">
+          <el-option v-for="item in userOptions" :key="item.id" :label="item.nickname" :value="item.id">
+            <span>{{ item.nickname }}</span>
+            <span class="text-gray-400 ml-2">(ID: {{ item.id }})</span>
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="简介" prop="detail">
         <el-input v-model="formData.detail" type="textarea" placeholder="请输入简介" />
@@ -21,12 +25,8 @@
       </el-form-item>
       <el-form-item label="状态 0招募中 1招募结束" prop="status">
         <el-select v-model="formData.status" placeholder="请选择状态 0招募中 1招募结束">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.TYLX_TEAM_STATUS)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+          <el-option v-for="dict in getIntDictOptions(DICT_TYPE.TYLX_TEAM_STATUS)" :key="dict.value" :label="dict.label"
+            :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="详细地址" prop="area">
@@ -36,20 +36,10 @@
         <el-input v-model="formData.maxNumber" placeholder="请输入最大组队数" />
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-        <el-date-picker
-          v-model="formData.startTime"
-          type="date"
-          value-format="x"
-          placeholder="选择开始时间"
-        />
+        <el-date-picker v-model="formData.startTime" type="date" value-format="x" placeholder="选择开始时间" />
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-        <el-date-picker
-          v-model="formData.endTime"
-          type="date"
-          value-format="x"
-          placeholder="选择结束时间"
-        />
+        <el-date-picker v-model="formData.endTime" type="date" value-format="x" placeholder="选择结束时间" />
       </el-form-item>
     </el-form>
     <!-- 子表的表单 -->
@@ -72,6 +62,8 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { TeamApi, TeamVO } from '@/api/tylx/team'
 import TeamChatForm from './components/TeamChatForm.vue'
 import TeamMemberForm from './components/TeamMemberForm.vue'
+import { DestinationApi } from '@/api/tylx/destination'
+import * as UserApi from '@/api/system/user'
 
 /** 队伍 表单 */
 defineOptions({ name: 'TeamForm' })
@@ -104,6 +96,35 @@ const subTabsName = ref('teamChat')
 const teamChatFormRef = ref()
 const teamMemberFormRef = ref()
 
+const destinationOptions = ref([])
+const userOptions = ref([])
+
+/** 获取目的地列表 */
+const getDestinationList = async () => {
+  try {
+    const res = await DestinationApi.getDestinationPage({
+      pageNo: 1,
+      pageSize: 100 // 获取所有目的地
+    })
+    destinationOptions.value = res.list
+  } catch (error) {
+    console.error('获取目的地列表失败:', error)
+  }
+}
+
+/** 获取用户列表 */
+const getUserList = async () => {
+  try {
+    const res = await UserApi.getUserPage({
+      pageNo: 1,
+      pageSize: 100 // 获取所有用户
+    })
+    userOptions.value = res.list
+  } catch (error) {
+    console.error('获取用户列表失败:', error)
+  }
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -119,6 +140,9 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false
     }
   }
+  // 在表单打开时获取目的地列表和用户列表
+  getDestinationList()
+  getUserList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 

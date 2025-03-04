@@ -6,6 +6,9 @@
         <view class="search-input">
           <uni-icons type="search" size="16" color="#999"></uni-icons>
           <input type="text" v-model="searchKeyword" placeholder="搜索目的地" @input="handleSearch" />
+          <view v-if="searchKeyword" class="clear-btn" @click="clearSearch">
+            <uni-icons type="clear" size="16" color="#999"></uni-icons>
+          </view>
         </view>
       </view>
     </view>
@@ -30,10 +33,14 @@
       <!-- 轮播图 -->
       <swiper class="banner" circular :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
         <swiper-item>
-          <image src="http://43.139.211.116:9000/financinglink/01563fbddc976d6db2f8e440c462ae6fddc5fa10ceef08132b6d7dc4665e3ca0.jpg" mode="aspectFill"></image>
+          <image
+            src="http://43.139.211.116:9000/financinglink/01563fbddc976d6db2f8e440c462ae6fddc5fa10ceef08132b6d7dc4665e3ca0.jpg"
+            mode="aspectFill"></image>
         </swiper-item>
         <swiper-item>
-          <image src="http://43.139.211.116:9000/financinglink/c3c32240d2a2b117fd3f0e767e46c91a7ee4198fc3e1ce63664996ff8ae214a9.jpg" mode="aspectFill"></image>
+          <image
+            src="http://43.139.211.116:9000/financinglink/c3c32240d2a2b117fd3f0e767e46c91a7ee4198fc3e1ce63664996ff8ae214a9.jpg"
+            mode="aspectFill"></image>
         </swiper-item>
       </swiper>
 
@@ -200,6 +207,10 @@ export default {
       const url = item.type === 'scenery' ? `/pages/destination/scenery?id=${item.id}` : `/pages/forum/detail?id=${item.id}`;
 
       uni.navigateTo({ url });
+    },
+    clearSearch() {
+      this.searchKeyword = '';
+      this.searchResults = [];
     }
   }
 };
@@ -429,5 +440,11 @@ export default {
 .no-result-text {
   font-size: 28rpx;
   color: #999;
+}
+
+/* 添加清除按钮样式 */
+.clear-btn {
+  padding: 10rpx;
+  margin-left: 10rpx;
 }
 </style>

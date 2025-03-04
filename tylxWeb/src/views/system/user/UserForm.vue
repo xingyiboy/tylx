@@ -1,12 +1,6 @@
 <template>
   <Dialog v-model="dialogVisible" :title="dialogTitle">
-    <el-form
-      ref="formRef"
-      v-loading="formLoading"
-      :model="formData"
-      :rules="formRules"
-      label-width="80px"
-    >
+    <el-form ref="formRef" v-loading="formLoading" :model="formData" :rules="formRules" label-width="80px">
       <el-row>
         <el-col :span="12">
           <el-form-item label="用户昵称" prop="nickname">
@@ -15,14 +9,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="归属部门" prop="deptId">
-            <el-tree-select
-              v-model="formData.deptId"
-              :data="deptList"
-              :props="defaultProps"
-              check-strictly
-              node-key="id"
-              placeholder="请选择归属部门"
-            />
+            <el-tree-select v-model="formData.deptId" :data="deptList" :props="defaultProps" check-strictly
+              node-key="id" placeholder="请选择归属部门" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -46,12 +34,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item v-if="formData.id === undefined" label="用户密码" prop="password">
-            <el-input
-              v-model="formData.password"
-              placeholder="请输入用户密码"
-              show-password
-              type="password"
-            />
+            <el-input v-model="formData.password" placeholder="请输入用户密码" show-password type="password" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -59,24 +42,23 @@
         <el-col :span="12">
           <el-form-item label="用户性别">
             <el-select v-model="formData.sex" placeholder="请选择">
-              <el-option
-                v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_USER_SEX)"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
+              <el-option v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_USER_SEX)" :key="dict.value"
+                :label="dict.label" :value="dict.value" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="金额" prop="money">
+            <el-input-number v-model="formData.money" :precision="2" :step="100" :min="0" controls-position="right"
+              placeholder="请输入金额" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="岗位">
             <el-select v-model="formData.postIds" multiple placeholder="请选择">
-              <el-option
-                v-for="item in postList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id!"
-              />
+              <el-option v-for="item in postList" :key="item.id" :label="item.name" :value="item.id!" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -125,7 +107,8 @@ const formData = ref({
   postIds: [],
   remark: '',
   status: CommonStatusEnum.ENABLE,
-  roleIds: []
+  roleIds: [],
+  money: 0,
 })
 const formRules = reactive<FormRules>({
   username: [{ required: true, message: '用户名称不能为空', trigger: 'blur' }],
@@ -144,6 +127,9 @@ const formRules = reactive<FormRules>({
       message: '请输入正确的手机号码',
       trigger: 'blur'
     }
+  ],
+  money: [
+    { required: true, message: '请输入金额', trigger: 'blur' },
   ]
 })
 const formRef = ref() // 表单 Ref

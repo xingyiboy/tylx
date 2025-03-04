@@ -1,12 +1,6 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-      v-loading="formLoading"
-    >
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="formLoading">
       <el-form-item label="首页图片" prop="picture">
         <MultipleUpload v-model="formData.picture" :limit="9" />
       </el-form-item>
@@ -19,11 +13,21 @@
       <el-form-item label="简介" prop="introduce">
         <el-input v-model="formData.introduce" type="textarea" placeholder="请输入简介" />
       </el-form-item>
-      <el-form-item label="用户编号" prop="userId">
-        <el-input v-model="formData.userId" placeholder="请输入用户编号" />
+      <el-form-item label="用户" prop="userId">
+        <el-select v-model="formData.userId" filterable placeholder="请选择用户" clearable class="!w-240px">
+          <el-option v-for="item in userOptions" :key="item.id" :label="item.nickname" :value="item.id">
+            <span>{{ item.nickname }}</span>
+            <span class="text-gray-400 ml-2">(ID: {{ item.id }})</span>
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="目的地编号" prop="destinationId">
-        <el-input v-model="formData.destinationId" placeholder="请输入目的地编号" />
+      <el-form-item label="目的地" prop="destinationId">
+        <el-select v-model="formData.destinationId" filterable placeholder="请选择目的地" clearable class="!w-240px">
+          <el-option v-for="item in destinationOptions" :key="item.id" :label="item.name" :value="item.id">
+            <span>{{ item.name }}</span>
+            <span class="text-gray-400 ml-2">(ID: {{ item.id }})</span>
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="阅读量" prop="view">
         <el-input v-model="formData.view" placeholder="请输入阅读量" />
@@ -36,12 +40,8 @@
       </el-form-item>
       <el-form-item label="是否精选" prop="isHome">
         <el-select v-model="formData.isHome" placeholder="请选择是否精选">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.IS_HOME)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+          <el-option v-for="dict in getIntDictOptions(DICT_TYPE.IS_HOME)" :key="dict.value" :label="dict.label"
+            :value="dict.value" />
         </el-select>
       </el-form-item>
     </el-form>
@@ -70,6 +70,8 @@ import ForumCommentForm from './components/ForumCommentForm.vue'
 import ForumLikesForm from './components/ForumLikesForm.vue'
 import ForumRewardForm from './components/ForumRewardForm.vue'
 import MultipleUpload from '@/components/MultipleUpload/index.vue'
+import { DestinationApi } from '@/api/tylx/destination'
+import * as UserApi from '@/api/system/user'
 
 /** 论坛 表单 */
 defineOptions({ name: 'ForumForm' })
@@ -103,6 +105,35 @@ const forumCommentFormRef = ref()
 const forumLikesFormRef = ref()
 const forumRewardFormRef = ref()
 
+const destinationOptions = ref([])
+const userOptions = ref([])
+
+/** 获取目的地列表 */
+const getDestinationList = async () => {
+  try {
+    const res = await DestinationApi.getDestinationPage({
+      pageNo: 1,
+      pageSize: 100 // 获取所有目的地
+    })
+    destinationOptions.value = res.list
+  } catch (error) {
+    console.error('获取目的地列表失败:', error)
+  }
+}
+
+/** 获取用户列表 */
+const getUserList = async () => {
+  try {
+    const res = await UserApi.getUserPage({
+      pageNo: 1,
+      pageSize: 100 // 获取所有用户
+    })
+    userOptions.value = res.list
+  } catch (error) {
+    console.error('获取用户列表失败:', error)
+  }
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -118,6 +149,9 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false
     }
   }
+  // 在表单打开时获取数据
+  getDestinationList()
+  getUserList() // 添加获取用户列表
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 

@@ -73,14 +73,12 @@ public class ForumController {
 
     @PostMapping("/create")
     @Operation(summary = "创建论坛")
-    @PreAuthorize("@ss.hasPermission('tylx:forum:create')")
     public CommonResult<Long> createForum(@Valid @RequestBody ForumSaveReqVO createReqVO) {
         return success(forumService.createForum(createReqVO));
     }
 
     @PutMapping("/update")
     @Operation(summary = "更新论坛")
-    @PreAuthorize("@ss.hasPermission('tylx:forum:update')")
     public CommonResult<Boolean> updateForum(@Valid @RequestBody ForumSaveReqVO updateReqVO) {
         forumService.updateForum(updateReqVO);
         return success(true);
@@ -89,7 +87,6 @@ public class ForumController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除论坛")
     @Parameter(name = "id", description = "编号", required = true)
-    @PreAuthorize("@ss.hasPermission('tylx:forum:delete')")
     public CommonResult<Boolean> deleteForum(@RequestParam("id") Long id) {
         forumService.deleteForum(id);
         return success(true);
@@ -156,7 +153,6 @@ public class ForumController {
 
     @GetMapping("/export-excel")
     @Operation(summary = "导出论坛 Excel")
-    @PreAuthorize("@ss.hasPermission('tylx:forum:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportForumExcel(@Valid ForumPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
@@ -196,7 +192,6 @@ public class ForumController {
     @GetMapping("/forum-likes/list-by-forum-id")
     @Operation(summary = "获得论坛点赞列表")
     @Parameter(name = "forumId", description = "论坛编号")
-    @PreAuthorize("@ss.hasPermission('tylx:forum:query')")
     public CommonResult<List<ForumLikesDO>> getForumLikesListByForumId(@RequestParam("forumId") Long forumId) {
         return success(forumService.getForumLikesListByForumId(forumId));
     }
@@ -206,7 +201,6 @@ public class ForumController {
     @GetMapping("/forum-reward/list-by-forum-id")
     @Operation(summary = "获得论坛打赏列表")
     @Parameter(name = "forumId", description = "论坛编号")
-    @PreAuthorize("@ss.hasPermission('tylx:forum:query')")
     public CommonResult<List<ForumRewardDO>> getForumRewardListByForumId(@RequestParam("forumId") Long forumId) {
         return success(forumService.getForumRewardListByForumId(forumId));
     }

@@ -19,7 +19,7 @@
           class="!w-220px"
         />
       </el-form-item>
-      <el-form-item label="目的地名称" prop="name">
+      <el-form-item label="名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入目的地名称"
@@ -28,7 +28,7 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="目的地描述" prop="detail">
+      <el-form-item label="描述" prop="detail">
         <el-input
           v-model="queryParams.detail"
           placeholder="请输入目的地描述"

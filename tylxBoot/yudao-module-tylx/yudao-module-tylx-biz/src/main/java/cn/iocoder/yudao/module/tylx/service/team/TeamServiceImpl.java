@@ -158,6 +158,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String joinTeam(Long id) {
         TeamDO teamDO = teamMapper.selectById(id);
         LambdaQueryWrapper<TeamMemberDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -174,6 +175,11 @@ public class TeamServiceImpl implements TeamService {
         teamMemberDO.setTeamId(id);
         teamMemberDO.setUserId(SecurityFrameworkUtils.getLoginUserId());
         teamMemberMapper.insert(teamMemberDO);
+        //判断是否满人，满人就更新状态
+        if(teamMemberDOS.size() + 1 > teamDO.getMaxNumber()){
+            teamDO.setStatus(1);
+            teamMapper.updateById(teamDO);
+        }
         return "加入成功";
     }
 
