@@ -14,7 +14,11 @@
 
       <view class="post-main">
         <view class="title">{{ detail.title }}</view>
+
         <mp-html :content="detail.content" />
+        <view class="post-images" v-if="detail.picture">
+          <image v-for="(pic, picIndex) in detail.picture.split(',')" :key="picIndex" :src="pic" mode="aspectFill"></image>
+        </view>
         <view class="images" v-if="detail.images">
           <image v-for="(img, index) in detail.images.split(',')" :key="index" :src="img" mode="widthFix" @click="previewImage(img, detail.images.split(','))"></image>
         </view>
@@ -36,7 +40,7 @@
           </view>
           <view class="action-item" @click="showRewardDialog">
             <uni-icons type="gift" size="20" color="#8a9ab0"></uni-icons>
-            <text>打赏</text>
+            <text>打赏 {{ detail.totalMoney ? '¥' + detail.totalMoney : '¥0' }}</text>
           </view>
         </view>
       </view>
@@ -445,5 +449,31 @@ export default {
       transform: scale(0.95);
     }
   }
+}
+
+.post-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+
+  image {
+    width: 100%;
+    height: 200rpx;
+    object-fit: cover;
+  }
+}
+
+/* 添加打赏金额样式 */
+.action-item text {
+  margin-left: 4rpx;
+  font-size: 24rpx;
+  color: #8a9ab0;
+}
+
+.action-item .money {
+  color: #ff9500;
+  font-weight: 500;
 }
 </style>

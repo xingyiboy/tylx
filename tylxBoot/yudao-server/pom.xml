@@ -21,7 +21,6 @@
     <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
 
     <dependencies>
-        <!-- szxc数字乡村模块 -->
         <dependency>
             <groupId>cn.iocoder.boot</groupId>
             <artifactId>yudao-module-tylx-biz</artifactId>

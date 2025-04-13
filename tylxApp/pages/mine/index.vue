@@ -83,19 +83,28 @@
 
 <script>
 import storage from '@/utils/storage';
+import { getUserProfile } from '@/api/system/user';
 
 export default {
   data() {
     return {
-      version: getApp().globalData.config.appInfo.version
+      version: getApp().globalData.config.appInfo.version,
+      userInfo: {},
+      money: 0
     };
   },
+
+  onShow() {
+    // 每次显示页面时重新获取用户信息
+    this.getUser();
+  },
+
   computed: {
     name() {
       return this.$store.state.user.name;
     },
-    money() {
-      return this.$store.state.user.money;
+    nickname() {
+      return this.$store.state.user.nickname;
     },
     avatar() {
       return this.$store.state.user.avatar;
@@ -104,7 +113,25 @@ export default {
       return uni.getSystemInfoSync().windowHeight - 50;
     }
   },
+
   methods: {
+    async getUser() {
+      try {
+        const res = await getUserProfile();
+        if (res.code === 0) {
+          this.userInfo = res.data;
+          this.money = res.data.money || 0;
+          // 更新 store 中的用户信息
+          this.$store.commit('user/setUserInfo', res.data);
+        }
+      } catch (error) {
+        console.error('获取用户信息失败:', error);
+        uni.showToast({
+          title: '获取用户信息失败',
+          icon: 'none'
+        });
+      }
+    },
     handleToPwd() {
       this.$tab.navigateTo('/pages/mine/pwd/index');
     },

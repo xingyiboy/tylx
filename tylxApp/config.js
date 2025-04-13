@@ -2,6 +2,7 @@
 module.exports = {
   // baseUrl: 'http://api-dashboard.yudao.iocoder.cn',
   baseUrl: 'http://43.139.211.116:5079',
+  // baseUrl: 'http://localhost:48080',
   baseApi: '/admin-api',
   // 应用信息
   appInfo: {

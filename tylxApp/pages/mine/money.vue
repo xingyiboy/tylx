@@ -20,11 +20,15 @@
       <text class="section-title">选择支付方式</text>
       <view class="method-list">
         <view class="method-item" :class="{ active: currentMethod === 'alipay' }" @tap="currentMethod = 'alipay'">
-          <image src="http://43.139.211.116:9000/financinglink/3775337b8da3454050dd341b1bda9b0e12d4ca605d35eaaaed0f3c0817d03465.png" mode="aspectFit" class="method-icon"></image>
+          <image
+            src="http://43.139.211.116:9000/financinglink/3775337b8da3454050dd341b1bda9b0e12d4ca605d35eaaaed0f3c0817d03465.png"
+            mode="aspectFit" class="method-icon"></image>
           <text>支付宝</text>
         </view>
         <view class="method-item" :class="{ active: currentMethod === 'wechat' }" @tap="currentMethod = 'wechat'">
-          <image src="http://43.139.211.116:9000/financinglink/99709cebb8a57f5cf34938d5cb6ccd392212ffee39c9c7867e9c04222a9b2a70.png" mode="aspectFit" class="method-icon"></image>
+          <image
+            src="http://43.139.211.116:9000/financinglink/99709cebb8a57f5cf34938d5cb6ccd392212ffee39c9c7867e9c04222a9b2a70.png"
+            mode="aspectFit" class="method-icon"></image>
           <text>微信支付</text>
         </view>
       </view>
@@ -32,15 +36,10 @@
 
     <!-- 二维码展示 -->
     <view class="qrcode-box">
-      <image
-        :src="
-          currentMethod === 'alipay'
-            ? 'http://43.139.211.116:9000/financinglink/13ea12c0e69812775b4a464db776bf56e550e1ec80cd46066186bcc2d79a5001.png'
-            : 'http://43.139.211.116:9000/financinglink/13ea12c0e69812775b4a464db776bf56e550e1ec80cd46066186bcc2d79a5001.png'
-        "
-        mode="aspectFit"
-        class="qrcode"
-      ></image>
+      <image :src="currentMethod === 'alipay'
+          ? 'http://43.139.211.116:9000/financinglink/13ea12c0e69812775b4a464db776bf56e550e1ec80cd46066186bcc2d79a5001.png'
+          : 'http://43.139.211.116:9000/financinglink/13ea12c0e69812775b4a464db776bf56e550e1ec80cd46066186bcc2d79a5001.png'
+        " mode="aspectFit" class="qrcode"></image>
     </view>
 
     <!-- 提示信息 -->
@@ -54,11 +53,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import { getUserProfile } from '@/api/system/user';
 
 export default {
   data() {
     return {
-      currentMethod: 'alipay' // 当前选择的支付方式
+      currentMethod: 'alipay', // 当前选择的支付方式
+      money: 0
     };
   },
 
@@ -66,14 +67,35 @@ export default {
     name() {
       return this.$store.state.user.name;
     },
-    money() {
-      return this.$store.state.user.money;
-    },
     avatar() {
       return this.$store.state.user.avatar;
     },
     userId() {
       return this.$store.state.user.id;
+    }
+  },
+
+  onShow() {
+    // 每次显示页面时重新获取用户信息
+    this.getUser();
+  },
+
+  methods: {
+    async getUser() {
+      try {
+        const res = await getUserProfile();
+        if (res.code === 0) {
+          this.money = res.data.money || 0;
+          // 同时更新 store 中的用户信息
+          this.$store.commit('user/setUserInfo', res.data);
+        }
+      } catch (error) {
+        console.error('获取用户信息失败:', error);
+        uni.showToast({
+          title: '获取用户信息失败',
+          icon: 'none'
+        });
+      }
     }
   }
 };

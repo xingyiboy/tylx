@@ -3,7 +3,8 @@
     <uni-forms ref="form" :model="formData" :rules="rules" label-position="top" err-show-type="undertext">
       <!-- 目的地 -->
       <uni-forms-item name="destinationId" label="目的地：">
-        <uni-combox v-model="selectedDestinationName" :candidates="destinations" placeholder="请选择或搜索目的地" @input="handleDestinationInput"></uni-combox>
+        <uni-combox v-model="selectedDestinationName" :candidates="destinations" placeholder="请选择或搜索目的地"
+          @input="handleDestinationInput"></uni-combox>
       </uni-forms-item>
 
       <!-- 简介 -->
@@ -17,22 +18,22 @@
       </uni-forms-item>
 
       <!-- 详细地址 -->
-      <uni-forms-item name="area" label="详细地址：">
+      <uni-forms-item name="area" label="详细地址">
         <uni-easyinput v-model="formData.area" placeholder="请输入详细地址" />
       </uni-forms-item>
 
       <!-- 最大组队数 -->
-      <uni-forms-item name="maxNumber" label="最大组队数：">
+      <uni-forms-item name="maxNumber" label="最大队数">
         <uni-number-box v-model="formData.maxNumber" :min="2" :max="20" />
       </uni-forms-item>
 
       <!-- 开始时间 -->
-      <uni-forms-item name="startTime" label="开始时间：">
+      <uni-forms-item name="startTime" label="开始时间">
         <uni-datetime-picker v-model="formData.startTime" type="datetime" :clear-icon="false" />
       </uni-forms-item>
 
       <!-- 结束时间 -->
-      <uni-forms-item name="endTime" label="结束时间：">
+      <uni-forms-item name="endTime" label="结束时间">
         <uni-datetime-picker v-model="formData.endTime" type="datetime" :clear-icon="false" />
       </uni-forms-item>
     </uni-forms>
@@ -216,5 +217,18 @@ export default {
       opacity: 0.8;
     }
   }
+}
+
+/* 修复所有表单项 label 样式 */
+:deep(.uni-forms-item__label) {
+  white-space: nowrap;
+  padding-right: 12px;
+  /* 可选：调整label右侧间距 */
+}
+
+/* 确保表单项内容对齐 */
+:deep(.uni-forms-item__content) {
+  display: flex;
+  align-items: center;
 }
 </style>

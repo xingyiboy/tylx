@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.tylx.controller.admin.forum;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.user.AdminUserMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.constraints.*;
 import javax.validation.*;
 import javax.servlet.http.*;
+import java.math.BigDecimal;
 import java.util.*;
 import java.io.IOException;
 
@@ -45,6 +47,8 @@ public class ForumController {
     private ForumService forumService;
     @Resource
     private AdminUserMapper adminUserMapper;
+    @Resource
+    private cn.iocoder.yudao.module.tylx.dal.mysql.forumreward.ForumRewardMapper forumRewardMapper;
 
     @PostMapping("/createLikes")
     @Operation(summary = "点赞-如果有点赞就是取消点赞")
@@ -105,6 +109,14 @@ public class ForumController {
         if (adminUserDO.getNickname() != null) {
             forumRespVO.setUserName(adminUserDO.getNickname());
         }
+        LambdaQueryWrapper<ForumRewardDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ForumRewardDO::getForumId, id);
+        List<ForumRewardDO> forumRewardDOS = forumRewardMapper.selectList(queryWrapper);
+        BigDecimal total = BigDecimal.ZERO;
+        for (cn.iocoder.yudao.module.tylx.dal.dataobject.forumreward.ForumRewardDO forumRewardDO : forumRewardDOS) {
+            total = total.add(forumRewardDO.getMoney());
+        }
+        forumRespVO.setTotalMoney(total);
         return success(forumRespVO);
     }
 

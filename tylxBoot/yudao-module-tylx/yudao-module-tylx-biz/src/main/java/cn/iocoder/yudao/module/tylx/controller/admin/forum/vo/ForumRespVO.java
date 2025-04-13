@@ -2,6 +2,8 @@ package cn.iocoder.yudao.module.tylx.controller.admin.forum.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.util.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
@@ -66,5 +68,7 @@ public class ForumRespVO {
     private String userName;
 
     private String avatar;
+
+    private BigDecimal totalMoney;
 
 }

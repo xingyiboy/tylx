@@ -23,7 +23,7 @@
       </uni-forms-item>
 
       <!-- 首页图片 -->
-      <uni-forms-item name="picture" label="首页图片：">
+      <uni-forms-item name="picture" label="首页图片">
         <view class="upload-box">
           <view class="upload-item" v-for="(pic, index) in pictureList" :key="index">
             <image :src="pic" mode="aspectFill"></image>
@@ -330,5 +330,9 @@ export default {
       opacity: 0.8;
     }
   }
+}
+
+:deep(.uni-forms-item__label) {
+  white-space: nowrap;
 }
 </style>

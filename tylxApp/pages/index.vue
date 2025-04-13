@@ -20,7 +20,9 @@
 
     <view v-for="item in searchResults" :key="item.id">
       <view class="search-item" @click="handleSelectDestination(item)">
-        <image v-if="item.picture" :src="item.picture" mode="aspectFill" class="item-image"></image>
+        <block v-if="item.picture">
+          <image v-for="(pic, picIndex) in item.picture.split(',')" :key="picIndex" :src="pic" mode="aspectFill" class="item-image"></image>
+        </block>
         <view class="item-content">
           <view class="item-name">{{ item.name }}</view>
           <view class="item-detail">{{ item.detail }}</view>
@@ -33,14 +35,10 @@
       <!-- 轮播图 -->
       <swiper class="banner" circular :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
         <swiper-item>
-          <image
-            src="http://43.139.211.116:9000/financinglink/01563fbddc976d6db2f8e440c462ae6fddc5fa10ceef08132b6d7dc4665e3ca0.jpg"
-            mode="aspectFill"></image>
+          <image src="http://43.139.211.116:9000/financinglink/01563fbddc976d6db2f8e440c462ae6fddc5fa10ceef08132b6d7dc4665e3ca0.jpg" mode="aspectFill"></image>
         </swiper-item>
         <swiper-item>
-          <image
-            src="http://43.139.211.116:9000/financinglink/c3c32240d2a2b117fd3f0e767e46c91a7ee4198fc3e1ce63664996ff8ae214a9.jpg"
-            mode="aspectFill"></image>
+          <image src="http://43.139.211.116:9000/financinglink/c3c32240d2a2b117fd3f0e767e46c91a7ee4198fc3e1ce63664996ff8ae214a9.jpg" mode="aspectFill"></image>
         </swiper-item>
       </swiper>
 
@@ -69,7 +67,11 @@
         <view class="section-title">精品推荐</view>
         <view class="recommend-list">
           <view class="recommend-item" v-for="(item, index) in recommendList" :key="index" @click="goToDetail(item)">
-            <image :src="item.picture" mode="aspectFill"></image>
+            <swiper class="swiper-box" circular :indicator-dots="false" :autoplay="true" :interval="3000" :duration="1000">
+              <swiper-item v-for="(pic, picIndex) in item.picture.split(',')" :key="picIndex">
+                <image :src="pic" mode="aspectFill" class="item-image"></image>
+              </swiper-item>
+            </swiper>
             <view class="item-info">
               <text class="item-name">{{ item.name }}</text>
               <text class="item-sales">{{ item.view }}</text>
@@ -94,9 +96,13 @@ export default {
       recommendList: []
     };
   },
-  async onLoad() {
-    await this.loadRecommendList();
+
+  // 页面每次显示时
+  onShow() {
+    // 如果不是首次加载，不重新获取数据
+    this.loadRecommendList();
   },
+
   methods: {
     async loadRecommendList() {
       try {
@@ -140,8 +146,7 @@ export default {
         }
 
         // 随机打乱数组顺序
-        this.recommendList = this.shuffleArray(recommendItems).slice(0, 4);
-        console.log(this.recommendList);
+        this.recommendList = recommendItems;
       } catch (error) {
         console.error('加载推荐列表失败:', error);
         uni.showToast({
@@ -316,6 +321,7 @@ export default {
 }
 
 .item-info {
+  margin-top: -70rpx;
   padding: 10rpx 0;
   text-align: center;
 }
@@ -393,10 +399,16 @@ export default {
 }
 
 .item-image {
-  width: 160rpx;
-  height: 160rpx;
+  width: 200rpx;
+  height: 200rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
   border-radius: 8rpx;
-  margin-right: 20rpx;
+}
+
+/* 最后一张图片不需要右边距 */
+.item-image:last-child {
+  margin-right: 0;
 }
 
 .item-content {
